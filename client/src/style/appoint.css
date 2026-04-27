@@ -1,0 +1,178 @@
+
+
+/* DEFAULT (Desktop) */
+.form-wrapper {
+  display: flex;
+  gap: 30px;
+}
+
+.logo{
+    width: 120px;
+}
+
+.left, .right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  margin-bottom: 12px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Upload row */
+.upload-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.upload-btn, button {
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Small preview */
+.preview {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button i, label i {
+  font-size: 16px;
+}
+
+/* Camera */
+.camera-box {
+  text-align: center;
+  margin-top: 15px;
+}
+
+
+
+.checkin-btn {
+  padding: 10px 30px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+/* TOP RIGHT BAR */
+
+
+/* COMMON ICON BUTTON */
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.icon-btn i {
+  font-size: 18px;
+}
+
+/* STATUS */
+.status-btn {
+  color: green;
+}
+
+.status-btn:hover {
+  background: #e6ffe6;
+}
+
+/* LOGOUT */
+.logout-btn {
+  color: red;
+}
+
+.logout-btn:hover {
+  background: #ffe6e6;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.loader-overlay .spinner-border {
+  width: 4rem;
+  height: 4rem;
+}
+
+
+
+
+/* 🔥 MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+
+    .logo{
+    width: 100px;
+    height: 50px !important;
+}
+  
+  .form-wrapper {
+    flex-direction: column;   /* 🔥 stack */
+    gap: 10px;
+  }
+
+  .left, .right {
+    width: 100%;
+  }
+
+  .input {
+    font-size: 16px; /* better for mobile typing */
+  }
+
+  .upload-box {
+    justify-content: space-between;
+  }
+
+  .preview {
+    width: 40px;
+    height: 40px;
+  }
+
+  .camera-box video {
+    width: 100%;   /* full width camera */
+  }
+
+  .checkin-btn {
+    width: 100%;   /* full width button */
+  }
+   .icon-btn {
+    width: 35px;
+    height: 35px;
+  }
+
+  .icon-btn i {
+    font-size: 16px;
+  }
+
+ .top-bar{
+    margin-top: -5px !important;
+ }
+}

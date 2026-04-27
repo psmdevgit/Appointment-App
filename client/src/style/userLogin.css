@@ -1,0 +1,59 @@
+.login-container {
+  height: 100vh;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+/* LOGO */
+.logo {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+/* TITLE */
+.welcome-text {
+  color: #198754;
+  font-weight: 700;
+}
+
+/* INPUT */
+.phone-input {
+  border-radius: 25px;
+  background: #e5e5e5;
+  border: none;
+  height: 45px;
+  padding-left: 20px;
+}
+
+/* BUTTON */
+.login-btn {
+  background-color: #198754;
+  color: white;
+  border-radius: 25px;
+  padding: 10px 40px;
+  border: none;
+  font-weight: 500;
+}
+
+.login-btn:hover {
+  background-color: #157347;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 576px) {
+  .logo {
+    width: 100px;
+  }
+
+  .welcome-text {
+    font-size: 22px;
+  }
+
+  .login-btn {
+    width: 100%;
+  }
+}

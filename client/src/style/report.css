@@ -1,0 +1,118 @@
+/* Wrapper for scroll */
+.table-wrapper {
+  max-height: 700px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+/* Table */
+.custom-table {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Header */
+.custom-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ae100d !important; /* 🔴 your color */
+  color: #fff;
+  z-index: 2;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  padding: 6px;
+  border: 1px solid #8b0000 !important;
+}
+
+/* Body cells */
+.custom-table tbody td {
+  font-size: 13px;
+  padding: 6px;
+  border: 1px solid #ddd !important;
+}
+
+/* Row hover */
+.custom-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Image styling */
+.custom-table img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Buttons */
+.btn-danger {
+  background-color: #d9534f;
+  border: none;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.btn-success {
+  background-color: #198754;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.custom-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  z-index: 1000;
+  padding: 8px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-item input {
+  cursor: pointer;
+}
+
+.filterdiv{
+     max-width: 180px !important;
+}
+.filtermeet{
+     max-width: 280px !important;
+}
+.filter-small label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.filter-small input,
+.filter-small .form-control {
+  font-size: 12px;
+  height: 32px;
+}
+
+.filter-small .form-control {
+  padding: 4px 8px;
+}
+
+.filter-small input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  transform: scale(0.85);
+  cursor: pointer;
+}

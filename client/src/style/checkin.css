@@ -1,0 +1,236 @@
+.main-wrapper {
+  padding: 30px;
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+.left-panel {
+  padding: 40px;
+}
+
+.title {
+  color: red;
+  font-weight: 600;
+}
+
+.line {
+  width: 80%;
+  border: 1px solid red;
+}
+
+.no-data {
+  margin-top: 20px;
+  color: #a33;
+  font-weight: 500;
+}
+
+.form-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #e9ecef;
+}
+
+textarea.input {
+  height: 70px;
+}
+
+.upload-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.upload-btn {
+  display: inline-block;
+  background: #1d2b53;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.file-text {
+  font-size: 12px;
+  color: #555;
+}
+
+.checkin-btn {
+  margin-top: 20px;
+  width: 150px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background: green;
+  color: white;
+  font-weight: bold;
+  float: right;
+}
+
+  .status-container {
+          min-height: 100vh;
+        }
+
+        .title {
+          text-align: center;
+          margin-bottom: 20px;
+          font-weight: bold;
+        }
+
+        .status-card {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #fff;
+          border-radius: 12px;
+          padding: 12px;
+          margin-bottom: 12px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .left-img img {
+          width: 70px;
+          height: 70px;
+          border-radius: 10px;
+          object-fit: cover;
+        }
+
+        .middle {
+          flex: 1;
+          padding: 0 15px;
+        }
+
+        .middle h5 {
+          margin: 0;
+          font-size: 16px;
+        }
+
+        .middle p {
+          margin: 2px 0;
+          font-size: 13px;
+          color: #555;
+        }
+
+        .status-badge {
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: bold;
+          min-width: 90px;
+          text-align: center;
+        }
+
+        .pending {
+          background: #fff3cd;
+          color: #856404;
+        }
+
+        .rejected {
+          background: #f8d7da;
+          color: #721c24;
+        }
+
+        .approved {
+          background: #d4edda;
+          color: #155724;
+        }
+          .logo{
+                width: 120px;
+            }
+
+            .approved-list {
+            max-height: 650px;
+            overflow-y: auto;
+            width: 90%;
+            }
+
+            /* Optional smooth scroll */
+            .approved-list::-webkit-scrollbar {
+            width: 6px;
+            }
+
+            .approved-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+            }
+
+            .status-card{
+              background: #eee;
+            }
+
+
+            .loader-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6); /* dark blur */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 99999;
+              }
+
+              /* optional bigger spinner */
+              .loader-overlay .spinner-border {
+                width: 4rem;
+                height: 4rem;
+              }
+
+
+        @media (max-width: 600px) {
+          .status-card {
+            flex-direction: row;
+          }
+              .status-list {
+            max-height: 550px;
+            }
+
+          .middle p {
+            font-size: 12px;
+          }
+            .top-bar{
+                margin-top: -5px !important;
+            }
+                
+                .logo{
+                width: 100px;
+                height: 50px !important;
+            }
+            
+            .middle h5 {
+                font-size: 14px;
+            }
+
+            .middle p {
+                font-size: 11px;
+            }
+
+            .status-badge {
+                font-size: 10px;
+                min-width: 70px;
+                padding: 5px 8px;
+            }
+
+            .status-card {
+                padding: 10px;
+            }
+  
+        }

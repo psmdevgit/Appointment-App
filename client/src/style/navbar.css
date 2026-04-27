@@ -1,0 +1,73 @@
+.navbar-top {
+  background: #fff;
+}
+
+.logo {
+  height: 55px;
+  object-fit: contain;
+}
+
+/* USER */
+.user-icon {
+  font-size: 22px;
+  color: #333;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-time {
+  font-size: 11px;
+  color: gray;
+}
+
+/* FLEX CONTROL */
+.left-title,
+.logo-center,
+.right-user {
+  flex: 1;
+}
+
+/* CENTER LOGO ALIGN */
+.logo-center {
+  display: flex;
+  justify-content: center;
+}
+
+/* RIGHT ALIGN */
+.right-user {
+  justify-content: flex-end;
+}
+.menubtn{
+  width: 150px;
+}
+/* MOBILE RESPONSIVE */
+@media (max-width: 576px) {
+
+  /* hide title */
+  .left-title {
+    display: none;
+  }
+
+  .logo {
+    height: 38px;
+  }
+
+  .user-name {
+    font-size: 11px;
+  }
+
+  .user-time {
+    font-size: 10px;
+  }
+
+  .user-icon {
+    font-size: 18px;
+  }
+
+  .menu-bar {
+    text-align: center;
+  }
+}

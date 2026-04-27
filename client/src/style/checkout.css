@@ -1,0 +1,174 @@
+.checkout-wrapper {
+  padding: 30px;
+  /* background: #f4f6f9; */
+  min-height: 100vh;
+}
+
+/* TITLE */
+.title {
+  color: red;
+  font-weight: 600;
+}
+
+.line {
+  border: 1px solid red;
+  width: 80%;
+}
+
+/* LIST CARD */
+.list-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eee;
+  padding: 10px 15px;
+  border-radius: 30px;
+  margin-bottom: 10px;
+}
+
+.list-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #bbb;
+  border-radius: 50%;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.company {
+  font-size: 12px;
+}
+
+.view-btn {
+  background: green;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* RIGHT SECTION */
+.details-section {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 100px;
+}
+
+/* PROFILE */
+.profile-section {
+  text-align: center;
+    display: flex;
+    flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.profile-box {
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  border-radius: 20px;
+}
+
+.card-box {
+  width: 200px;
+  height: 150px;
+  background: #fff;
+  margin-top: 20px;
+  border-radius: 20px;
+}
+
+/* INFO */
+.info-section {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+
+.info-section p {
+  margin: 8px 0;
+}
+
+/* BUTTON */
+.checkout-btn {
+  margin-top: 20px;
+  width: 160px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  font-weight: bold;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start; /* important change */
+  margin-bottom: 8px;
+}
+
+.label {
+  width: 150px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.colon {
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.value {
+  flex: 1;
+  min-width: 0;              /* VERY IMPORTANT */
+  word-break: break-word;    /* breaks long text */
+  overflow-wrap: anywhere;   /* extra safety */
+}
+
+.checkin-list {
+            max-height: 650px ;
+            overflow-y: auto;
+            width: 100%;
+            }
+
+            /* Optional smooth scroll */
+            .checkin-list::-webkit-scrollbar {
+            width: 6px;
+            }
+
+            .checkin-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+            }
+
+            .loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.loader-overlay .spinner-border {
+  width: 4rem;
+  height: 4rem;
+}
