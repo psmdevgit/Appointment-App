@@ -1,0 +1,90 @@
+.nav-logo{
+    width: 100px;
+}
+.navbar-main{
+    background-color:#9FCB98 ;
+}
+
+.custom-table > thead > tr > th{
+  background-color: #D0DEBD !important;
+  border: #ccc 1px solid !important;
+}
+
+.custom-table > thead > tr > th {
+  color: #000 !important;
+}
+
+ /* MOBILE VIEW */
+@media (max-width: 600px) {
+
+        .nav-logo{
+    width: 80px;
+}
+
+.navbar-left{
+    display: none;
+}
+
+  .filter-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .filter-box {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .filter-label {
+    display: none; /* 🔥 hide labels */
+  }
+
+  .filterdiv {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  /* TABLE */
+  .custom-table {
+    table-layout: fixed;        /* ✅ force fit inside screen */
+    width: 100%;
+  }
+
+  /* HEADER */
+  .custom-table th {
+    text-align: center;
+    font-size: 11px !important;
+    background-color: #D0DEBD !important;
+    padding: 6px;
+    white-space: nowrap;
+  }
+
+  /* ROWS */
+  .custom-table td {
+    font-size: 10px  !important;
+    padding: 6px;
+    text-align: center;
+    word-wrap: break-word;      /* ✅ prevent overflow */
+  }
+
+  /* Hide unwanted columns */
+  .hide-mobile {
+    display: none;
+  }
+
+  /* Make table scroll safe */
+   .table-wrapper {
+    height: 550px;              /* ✅ fixed height */
+    overflow-y: auto;           /* ✅ vertical scroll */
+    overflow-x: hidden;         /* ❌ remove horizontal scroll */
+    border: 1px solid #ddd;
+  }
+
+  .more-btn{
+    font-size: 10px !important;
+  }
+
+  
+
+}

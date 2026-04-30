@@ -63,10 +63,25 @@ const handleLogin = async (e) => {
 
     localStorage.setItem("user", JSON.stringify(res.data.data));
 
-    // ✅ toast first, THEN redirect after close
-    showToast("Login Success", "success", () => {
-      navigate("/checkin");
-    });
+    console.log(res.data.data)
+    const desgcode = res.data.data.desgcode;
+    console.log("desgcode ",desgcode)
+
+    if(desgcode != null || desgcode != undefined){
+        showToast("Login Success", "success", () => {
+        navigate(`/approvals?id=${desgcode}`);
+      });
+    }
+    else{
+
+      // ✅ toast first, THEN redirect after close
+      showToast("Login Success", "success", () => {
+        navigate("/checkin");
+      });
+
+    }
+
+    
 
   } catch (err) {
     showToast(

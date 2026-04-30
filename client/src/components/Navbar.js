@@ -65,7 +65,7 @@ export default function Navbar() {
           </div>
 
           {/* RIGHT USER INFO */}
-          <div className="right-user d-flex align-items-center gap-2">
+          <div className="right-user d-flex align-items-center gap-2" onClick={() => navigate("/login")}>
 
             <i className="bi bi-person-circle user-icon"></i>
 

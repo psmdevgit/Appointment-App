@@ -2,12 +2,14 @@ import React, { useRef, useState, useEffect } from "react";
 import "../style/appoint.css";
 import API from "../axios"
 import logo from "../assets/pos.png"
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 
 export default function Appoint() {
 
   
     const navigate = useNavigate();
+
+      const API_KEY = "F7Mk-ZmpH-mrgN";
   
   const mobile = localStorage.getItem("mobile");
   const today = new Date().toISOString().split("T")[0];
@@ -53,7 +55,7 @@ useEffect(() => {
     try {
       const res = await API.get(`/appointment-by-mobile/${mobile}`);
 
-      console.log("response : ",res.data.data.imagePath)
+      // console.log("response : ",res.data.data.imagePath)
 
       if (res.data.status === "success" && res.data.data) {
         const d = res.data.data;
@@ -122,23 +124,59 @@ useEffect(() => {
   const [cameraOn, setCameraOn] = useState(false);
 
   // 🎯 Time slots
+  // const generateTimeSlots = () => {
+  //   const slots = [];
+  //   let start = 10 * 60;
+  //   let end = 17 * 60;
+
+  //   while (start <= end) {
+  //     let h = Math.floor(start / 60);
+  //     let m = start % 60;
+
+  //     let ampm = h >= 12 ? "PM" : "AM";
+  //     let dh = h > 12 ? h - 12 : h;
+
+  //     slots.push(`${dh}:${m === 0 ? "00" : m} ${ampm}`);
+  //     start += 30;
+  //   }
+  //   return slots;
+  // };
+
   const generateTimeSlots = () => {
-    const slots = [];
-    let start = 10 * 60;
-    let end = 17 * 60;
+  const slots = [];
+  let start = 10 * 60; // 10:00 AM
+  let end = 17 * 60;   // 5:00 PM
 
-    while (start <= end) {
-      let h = Math.floor(start / 60);
-      let m = start % 60;
+  const now = new Date();
 
-      let ampm = h >= 12 ? "PM" : "AM";
-      let dh = h > 12 ? h - 12 : h;
+  // current time in minutes
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-      slots.push(`${dh}:${m === 0 ? "00" : m} ${ampm}`);
-      start += 30;
-    }
-    return slots;
-  };
+  const isToday = form.date === new Date().toISOString().split("T")[0];
+
+  while (start <= end) {
+    let h = Math.floor(start / 60);
+    let m = start % 60;
+
+    let ampm = h >= 12 ? "PM" : "AM";
+    let dh = h > 12 ? h - 12 : h;
+
+    const label = `${dh}:${m === 0 ? "00" : m} ${ampm}`;
+
+    // ✅ Disable logic
+    const isDisabled = isToday && start <= currentMinutes;
+
+    slots.push({
+      label,
+      value: label,
+      disabled: isDisabled
+    });
+
+    start += 30;
+  }
+
+  return slots;
+};
 
   // 📷 Open Camera
 const openCamera = (type) => {
@@ -212,6 +250,70 @@ const captureImage = () => {
   };
 };
 
+
+const sendMessage = async (phone, meetName, vName, company, date, time, id ) => {
+  try {
+
+       const formatDate = (dateStr) => {
+      const date = new Date(dateStr);
+
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+
+      return `${day}-${month}-${year}`;
+    };
+
+
+    const approve = `https://appointment.pothysswarnamahalapp.com/approvals?id=${id}`
+
+    const response = await fetch("https://api.qikchat.in/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // "Authorization": "Bearer F7Mk-ZmpH-mrgN"
+        "QIKCHAT-API-KEY": API_KEY,
+      },
+      body: JSON.stringify({
+        to: phone,
+        type: "template",
+        channel: "whatsapp",
+        template: {
+          name: "appoint_req",
+          language:  "en" ,
+          components: [
+            {
+              type: "body",
+              parameters: [
+                { type: "text", text: meetName },
+                { type: "text", text: vName },
+                { type: "text", text: company },
+                { type: "text", text: formatDate(date) },
+                { type: "text", text: time },
+                { type: "text", text: approve }
+              ]
+            }
+          ]
+        }
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Message Sent Successfully!");
+    } else {
+      console.log("Error: " + JSON.stringify(data));
+    }
+
+    console.log(data);
+
+  } catch (error) {
+    console.error(error);
+    console.log("Error sending message");
+  }
+};
+
  const handleSubmit = async () => {
   // validation same as before...
     // ✅ VALIDATION
@@ -235,9 +337,9 @@ const captureImage = () => {
 };
 
     const payload = {
-      name: form.name,
+      name: form.name.toUpperCase(),
       phone: mobile,
-      company: form.company,
+      company: form.company.toUpperCase(),
       toMeet: form.toMeet,
       toMeetId: form.toMeetId,
       date: form.date,
@@ -247,20 +349,25 @@ const captureImage = () => {
     };
 
     console.log(payload);
+
     const res = await API.post("/appoint", payload);
 
-
     if (res.data.status === "success") {
+
+      const apptid = res.data.apptid;
+
+      // console.log("Appointment", res.data)
+
       const toastEl = document.getElementById("successToast");
       const toast = new window.bootstrap.Toast(toastEl, {
-          delay: 2000 // ✅ 3 seconds
+          delay: 3000 // ✅ 3 seconds
         });
         
         toast.show();
 
           setTimeout(() => {
-    navigate("/status");
-  }, 3000);
+            navigate("/status");
+          }, 2500);
 
         setForm({
         name: form.name,
@@ -273,6 +380,29 @@ const captureImage = () => {
         photo: form.photo,
         card: form.card
       });
+
+      const toMeetId = form.toMeetId.trim();
+
+      if (toMeetId) {
+        try {
+          const mNumberRes = await API.get(`/get-meet-number?toMeetId=${toMeetId}`);
+          
+          if (mNumberRes.data.status === "success") {
+            const mobileNumber = mNumberRes.data.mobile;
+            const meetName = mNumberRes.data.name.toUpperCase();
+            const id = `${form.toMeetId}`
+            console.log("To Meet Mobile:", mobileNumber, meetName);
+            sendMessage(mobileNumber, meetName, form.name, form.company.toUpperCase(), form.date, form.time, id  )
+          } else {
+            console.log(mNumberRes.data.status);
+          }
+
+        } catch (err) {
+          console.error("Error fetching mobile number", err);
+        }
+      }
+
+    
 
       // setPreview({
       //   // photo: null,
@@ -385,7 +515,7 @@ const captureImage = () => {
 
 
           <label>Time</label>
-          <select
+          {/* <select
               className="input"
               value={form.time}
               onChange={(e) => setForm({ ...form, time: e.target.value })}
@@ -397,7 +527,22 @@ const captureImage = () => {
                   {t}
                 </option>
               ))}
-            </select>
+            </select> */}
+
+            <select
+                className="input"
+                value={form.time}
+                onChange={(e) => setForm({ ...form, time: e.target.value })}
+              >
+                <option value="">Select Time</option>
+
+                {generateTimeSlots().map((t, i) => (
+                  <option key={i} value={t.value} disabled={t.disabled}>
+                    {t.label} {t.disabled ? "(Closed)" : ""}
+                  </option>
+                ))}
+              </select>
+
         </div>
 
         {/* RIGHT SIDE */}

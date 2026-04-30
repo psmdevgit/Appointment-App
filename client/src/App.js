@@ -8,9 +8,11 @@ import CheckIn from "./components/CheckIn";
 import CheckOut from "./components/CheckOut";
 import Reports from "./components/Reports";
 import Login from "./components/Login";
+import Approvals from "./components/ApprovalPage";
 import UserLogin from "./User/UserLogin";
 import Appoint from "./User/Appoint.js";
 import Status from "./User/Status.js";
+import ErrorPage from "./components/ErrorPage";
 
 
 function App() {
@@ -18,9 +20,10 @@ function App() {
     <Router>
       <Routes>
 
-
+          <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<UserLogin />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/approvals" element={<Approvals />} />
 
         {/* 🔹 WITHOUT NAVBAR */}
         <Route element={<AuthLayout />}>
