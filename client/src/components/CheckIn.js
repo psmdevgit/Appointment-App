@@ -14,6 +14,7 @@ export default function CheckIn() {
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isManualSelect, setIsManualSelect] = useState(false);
     
   const today = new Date().toISOString().split("T")[0];
 
@@ -37,6 +38,20 @@ export default function CheckIn() {
   apptID: "",
   name: "",
   phone: "",
+  company: "",
+  toMeet: "",
+  toMeetId: "",
+  date: today,
+  time: "",
+  purpose: "",
+  photo: null,
+  card: null
+};
+
+ const phoneForm = {
+    id:"",
+  apptID: "",
+  name: "",
   company: "",
   toMeet: "",
   toMeetId: "",
@@ -129,6 +144,100 @@ const getImageSrc = (path) => {
   }, [user]);
 
 
+//   useEffect(() => {
+//   const fetchVendor = async () => {
+//     if (form.phone.length === 10) {
+      
+//       const phone = form.phone; // ✅ prevent repeat
+
+//       try {
+//         const res = await API.get(`/get-vendor-by-phone?phone=${phone}`);
+
+//         console.log("hello : ", res.data);
+
+//         if (res.data.status === "success") {
+//           handleView(res.data.data);
+//         }
+
+//       } catch (err) {
+//         console.log(err);
+//       }
+//     }
+//     else if (form.phone && form.phone.length < 10) {
+
+//       // ✅ reset only when user deletes digits
+//       setForm((prev) => ({
+//         ...prev,
+//         id: "",
+//         apptID: "",
+//         name: "",
+//         company: "",
+//         toMeet: "",
+//         toMeetId: "",
+//         date: today,
+//         time: "",
+//         purpose: "",
+//         photo: "",
+//         card: ""
+//       }));
+//       setPreview({
+//     photo: null,
+//     card: null,
+//   });
+
+//     }
+//   };
+
+//   fetchVendor();
+// }, [form.phone]);
+
+useEffect(() => {
+  const fetchVendor = async () => {
+
+    // 🚫 STOP if manual selection
+    if (isManualSelect) {
+      setIsManualSelect(false); // reset for next time
+      return;
+    }
+
+    if (form.phone.length === 10) {
+      try {
+        const res = await API.get(`/get-vendor-by-phone?phone=${form.phone}`);
+
+        if (res.data.status === "success") {
+          handleView(res.data.data);
+        }
+
+      } catch (err) {
+        console.log(err);
+      }
+    } 
+    else if (form.phone && form.phone.length < 10) {
+      setForm((prev) => ({
+        ...prev,
+        id: "",
+        apptID: "",
+        name: "",
+        company: "",
+        toMeet: "",
+        toMeetId: "",
+        date: today,
+        time: "",
+        purpose: "",
+        photo: "",
+        card: ""
+      }));
+
+      setPreview({
+        photo: null,
+        card: null,
+      });
+    }
+  };
+
+  fetchVendor();
+}, [form.phone]);
+
 useEffect(() => {
   const fetchToMeet = async () => {
     try {
@@ -161,7 +270,7 @@ useEffect(() => {
   const generateTimeSlots = () => {
     const slots = [];
     let start = 10 * 60;
-    let end = 17 * 60;
+    let end = 19 * 60;
 
     while (start <= end) {
       let h = Math.floor(start / 60);
@@ -175,6 +284,43 @@ useEffect(() => {
     }
     return slots;
   };
+
+//     const generateTimeSlots = () => {
+//   const slots = [];
+//   let start = 10 * 60; // 10:00 AM
+//   let end = 19 * 60;   // 5:00 PM
+
+//   const now = new Date();
+
+//   // current time in minutes
+//   const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+//   const isToday = form.date === new Date().toISOString().split("T")[0];
+
+//   while (start <= end) {
+//     let h = Math.floor(start / 60);
+//     let m = start % 60;
+
+//     let ampm = h >= 12 ? "PM" : "AM";
+//     let dh = h > 12 ? h - 12 : h;
+
+//     const label = `${dh}:${m === 0 ? "00" : m} ${ampm}`;
+
+//     // ✅ Disable logic
+//     const isDisabled = isToday && start <= currentMinutes;
+
+//     slots.push({
+//       label,
+//       value: label,
+//       disabled: isDisabled
+//     });
+
+//     start += 30;
+//   }
+
+//   return slots;
+// };
+
 
   // 📷 Open Camera
 const openCamera = (type) => {
@@ -287,15 +433,52 @@ const captureImage = () => {
   };
 };
 
+// const handleView = (item) => {
+//   const today = new Date().toISOString().split("T")[0];
+
+//   const cleanedId = String(item.toMeetId || "").trim();
+
+
+//   console.log("item : ",item)
+
+//   // console.log("DB ID:", cleanedId);
+//   // console.log("List:", toMeetList);
+
+//   setForm((prev) => ({
+//     ...prev,
+//     id: item.id || "",
+//     apptID: item.apptid || "",
+//     name: item.vName || "",
+//     company: item.companyName || "",
+//     phone: item.vNumber || "",
+//     toMeetId: cleanedId, // ✅ directly set
+//     toMeet: item.toMeet || "",
+//     date: today,
+//     time: item.apptTime || "",
+//     purpose: item.purpose || "",
+//     photo: item.imagePath
+//       ? `${item.imagePath}`
+//       : null,
+//     card: item.bCardPath
+//       ? `${item.bCardPath}`
+//       : null,
+//   }));
+
+//   setPreview({
+//     photo: item.imagePath
+//       ? `${item.imagePath}`
+//       : null,
+//     card: item.bCardPath
+//       ? `${item.bCardPath}`
+//       : null,
+//   });
+
+// };
+
 const handleView = (item) => {
+  setIsManualSelect(true); // 🚨 IMPORTANT
+
   const today = new Date().toISOString().split("T")[0];
-
-  const cleanedId = String(item.toMeetId || "").trim();
-
-  console.log("item : ",item)
-
-  // console.log("DB ID:", cleanedId);
-  // console.log("List:", toMeetList);
 
   setForm((prev) => ({
     ...prev,
@@ -304,28 +487,19 @@ const handleView = (item) => {
     name: item.vName || "",
     company: item.companyName || "",
     phone: item.vNumber || "",
-    toMeetId: cleanedId, // ✅ directly set
+    toMeetId: String(item.toMeetId || ""),
     toMeet: item.toMeet || "",
     date: today,
     time: item.apptTime || "",
     purpose: item.purpose || "",
-    photo: item.imagePath
-      ? `${item.imagePath}`
-      : null,
-    card: item.bCardPath
-      ? `${item.bCardPath}`
-      : null,
+    photo: item.imagePath || null,
+    card: item.bCardPath || null,
   }));
 
   setPreview({
-    photo: item.imagePath
-      ? `${item.imagePath}`
-      : null,
-    card: item.bCardPath
-      ? `${item.bCardPath}`
-      : null,
+    photo: item.imagePath || null,
+    card: item.bCardPath || null,
   });
-
 };
 
  const handleSubmit = async () => {
@@ -374,6 +548,8 @@ const handleView = (item) => {
     console.log(payload);
 
     const res = await API.post("/checkIN", payload);
+
+    console.log("check : ",res.data);
 
     if (res.data.status === "success") {
       const toastEl = document.getElementById("successToast");
@@ -513,6 +689,23 @@ const clearImage = (type) => {
                     {/* LEFT SIDE */}
                     <div className="left">
 
+                     <label>Mobile</label>
+                     <input
+                          className="input"
+                          value={form.phone}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // allow only digits and max 10
+                            if (/^\d{0,10}$/.test(value)) {
+                              setForm((prev) => ({
+                                ...prev,
+                                phone: value
+                              }));
+                            }
+                          }}
+                        />
+
+
                       <label  style={{display:"none"}}>ApptID</label>
                       <input style={{display:"none"}}
                         className="input"
@@ -534,22 +727,7 @@ const clearImage = (type) => {
                         onChange={(e) => setForm({ ...form, company: e.target.value })}
                       />
 
-                      <label>Mobile</label>
-                     <input
-                          className="input"
-                          value={form.phone}
-                          onChange={(e) => {
-                            const value = e.target.value;
-
-                            // allow only digits and max 10
-                            if (/^\d{0,10}$/.test(value)) {
-                              setForm((prev) => ({
-                                ...prev,
-                                phone: value
-                              }));
-                            }
-                          }}
-                        />
+                     
 
                       <label>Date</label>
                       <input
@@ -573,6 +751,21 @@ const clearImage = (type) => {
                             </option>
                           ))}
                         </select>
+                         
+                         {/* <select
+                className="input"
+                value={form.time}
+                onChange={(e) => setForm({ ...form, time: e.target.value })}
+              >
+                <option value="">Select Time</option>
+
+                {generateTimeSlots().map((t, i) => (
+                  <option key={i} value={t.value} disabled={t.disabled}>
+                    {t.label} {t.disabled ? "(Closed)" : ""}
+                  </option>
+                ))}
+            </select> */}
+
                     </div>
 
                     {/* RIGHT SIDE */}

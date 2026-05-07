@@ -145,7 +145,7 @@ useEffect(() => {
   const generateTimeSlots = () => {
   const slots = [];
   let start = 10 * 60; // 10:00 AM
-  let end = 17 * 60;   // 5:00 PM
+  let end = 19 * 60;   // 5:00 PM
 
   const now = new Date();
 
@@ -541,7 +541,7 @@ const sendMessage = async (phone, meetName, vName, company, date, time, id ) => 
                     {t.label} {t.disabled ? "(Closed)" : ""}
                   </option>
                 ))}
-              </select>
+            </select>
 
         </div>
 

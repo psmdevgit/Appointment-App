@@ -4,6 +4,7 @@ const { sql, getConnection, getDb2Connection } = require("../db");
 const axios = require("axios");
 const { DateTime, pool } = require("mssql");
 const API_KEY = "F7Mk-ZmpH-mrgN";
+const adminNumber = "9080450318" ;
 
 
 // ============  User Login   ====================================================================================
@@ -168,6 +169,120 @@ const sendResponseWtMessage = async (action , vNumber, vName, toMeet, apptDate, 
             {
               type: "body",
               parameters: parameter
+            }
+          ]
+        }
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Message Sent Successfully!");
+    } else {
+      console.log("Error: " + JSON.stringify(data));
+    }
+
+    console.log(data);
+
+  } catch (error) {
+    console.error(error);
+    console.log("Error sending message");
+  }
+};
+
+//  =======================     Whatsapp Message for approve/reject   ============================================
+
+const sendRejectWtMessage = async ( vName, toMeet, apptTime, apptDate ) => {
+  try {
+
+    // console.log("strated   ", action, toMeet, vNumber, vName, apptTime, apptDate)
+
+    const formatDate = (dateStr) => {
+      const date = new Date(dateStr);
+
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+
+      return `${day}-${month}-${year}`;
+    };
+
+
+    const response = await fetch("https://api.qikchat.in/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // "Authorization": "Bearer F7Mk-ZmpH-mrgN"
+        "QIKCHAT-API-KEY": API_KEY,
+      },
+      body: JSON.stringify({
+        to: adminNumber,
+        type: "template",
+        channel: "whatsapp",
+        template: {
+          name: "appoint_reject",
+          language:  "en" ,
+          components: [
+            {
+              type: "body",
+               parameters: [
+                { type: "text", text: vName },
+                { type: "text", text: toMeet },
+                { type: "text", text: apptTime },
+                { type: "text", text: formatDate(apptDate) },
+              ]
+            }
+          ]
+        }
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Message Sent Successfully!");
+    } else {
+      console.log("Error: " + JSON.stringify(data));
+    }
+
+    console.log(data);
+
+  } catch (error) {
+    console.error(error);
+    console.log("Error sending message");
+  }
+};
+
+
+//  =======================     Whatsapp Message for Check IN  ============================================
+
+const sendCheckinWtMessage = async ( vNumber, vName, toMeet ) => {
+  try {
+
+    console.log(vName, toMeet);
+
+    const response = await fetch("https://api.qikchat.in/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // "Authorization": "Bearer F7Mk-ZmpH-mrgN"
+        "QIKCHAT-API-KEY": API_KEY,
+      },
+      body: JSON.stringify({
+        to: vNumber,
+        type: "template",
+        channel: "whatsapp",
+        template: {
+          name: "appoint_checkin",
+          language:  "en" ,
+          components: [
+            {
+              type: "body",
+               parameters: [
+                { type: "text", text: vName },
+                { type: "text", text: toMeet },
+              ]
             }
           ]
         }
@@ -490,12 +605,12 @@ router.get("/approved-list", async (req, res) => {
 router.post("/checkIN", async (req, res) => {
   try {
     const { id, appt, name, phone, company, toMeet, toMeetId, date, time, purpose, photo, card } = req.body;
-
-
+          
 
     // console.log("incoming : ",req.body);
 
     const pool = await getDb2Connection();
+    const toMeetperson = await getMeetPerson(pool, toMeetId);
 
     if(appt == "new"){
       
@@ -519,6 +634,9 @@ router.post("/checkIN", async (req, res) => {
             (@apptid, @name, @phone, getdate(), @date, @time,  @toMeet, @purpose, getdate(), getdate(), @company, @photo, @card, 3, getdate(), @toMeetId)
           `);
 
+
+          sendCheckinWtMessage(phone, name, toMeetperson);
+
         res.json({ status: "success" });
 
     }
@@ -538,6 +656,9 @@ router.post("/checkIN", async (req, res) => {
             set apptTime = @time, toMeet = @toMeet, toMeetID = @toMeetId, purpose = @purpose, visitDate = getdate(), inTime = getdate(), status = 3, imagePath = @photo, bCardPath = @card
             where id = @id and apptID = @apptid
           `);
+
+
+          sendCheckinWtMessage(phone, name, toMeetperson);
 
         res.json({ status: "success" });
 
@@ -845,6 +966,10 @@ router.post("/appoint-action", async (req, res) => {
       vDetails.apptTime
     );
 
+    if(status == 1){
+      await sendRejectWtMessage(vDetails.vName, toMeet, vDetails.apptTime, vDetails.apptDate);
+    }
+
     res.json({ status: "success" });
 
       
@@ -879,6 +1004,54 @@ router.get("/approve", async (req, res) => {
   }
 });
 
+//  ==========================    get auto fill vendor details    =================================================
+
+// GET vendor by mobile
+router.get("/get-vendor-by-phone", async (req, res) => {
+  const { phone } = req.query;
+
+  const pool = await getDb2Connection();
+
+  try {
+    const result = await pool.request()
+      .input("phone", sql.VarChar, phone)
+      .query(`
+       	 SELECT top 1
+        id,
+          vName,
+          vNumber,
+          companyName,
+          --apptTime,
+          --apptDate,
+          --toMeet,
+          --LTRIM(RTRIM(toMeetID)) AS toMeetId,
+          --status,
+          imagePath,
+          bCardPath
+        FROM Appointments
+        WHERE vNumber = @phone 
+        ORDER BY id desc
+      `);
+
+    if (result.recordset.length > 0) {
+      res.json({
+        status: "success",
+        data: result.recordset[0]
+      });
+    } else {
+      res.json({
+        status: "empty"
+      });
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error" });
+  }
+});
+
 //  ===============================================================================================================
+
+
 
 module.exports = router;

@@ -16,9 +16,14 @@
 
  /* MOBILE VIEW */
 @media (max-width: 600px) {
-
         .nav-logo{
     width: 80px;
+}
+
+
+.approvebtn{
+  font-size: .5rem !important;
+  margin-bottom: 2px;
 }
 
 .navbar-left{

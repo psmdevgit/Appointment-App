@@ -646,11 +646,11 @@ useEffect(() => {
               </td>
 
               {/* Action */}
-              <td>
+              <td className="actionbtndiv">
                 {item.status == 0 && (
                   <>
                     <button
-                      className="btn btn-success btn-sm"
+                      className="btn btn-success btn-sm approvebtn"
                       onClick={() => handleUpdate(item, "approve", "")}
                       disabled={outLoadingId === item.id}
                     >
@@ -663,7 +663,7 @@ useEffect(() => {
                     </button>
 
                     <button
-                      className="btn btn-danger btn-sm ms-1"
+                      className="btn btn-danger btn-sm ms-1 approvebtn"
                       onClick={() => {
                         setSelectedVendor(item);
                         setShowRejectModal(true);
