@@ -54,6 +54,7 @@ router.get("/to-meet-list", async (req, res) => {
         CONCAT(name, ' (', Designation,')') AS displayName,
         desgOrder
       FROM VistorList
+      where active = 'y'
       ORDER BY desgOrder ASC
     `);
 
@@ -64,6 +65,220 @@ router.get("/to-meet-list", async (req, res) => {
 
   } catch (error) {
     // console.log(error);
+    res.status(500).json({
+      status: "error",
+      message: "Technical issue"
+    });
+  }
+});
+
+// Vistor List =====================================================================================
+router.get("/visitorlist", async (req, res) => {
+  try {
+    const pool = await getDb2Connection();
+
+    const result = await pool.request().query(`     
+      select id, name, empcode, designation, active, department, desgorder, phoneno from VistorList order by desgorder asc
+    `);
+
+     const resultcount = await pool.request().query(`     
+      select count(*) as count from VistorList
+    `);
+
+    res.json({
+      status: "success",
+      data: result.recordset,
+      count: resultcount.recordset
+    });
+
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({
+      status: "error",
+      message: "Technical issue"
+    });
+  }
+});
+
+router.post("/visitorlist/add", async (req, res) => {
+  try {
+
+    const {
+      name,
+      empcode,
+      designation,
+      active,
+      department,
+      desgorder,
+      phoneno
+    } = req.body;
+
+    console.log((req.body));
+
+    const pool = await getDb2Connection();
+
+    await pool.request()
+      .input("name", sql.VarChar, name)
+      .input("empcode", sql.Int, empcode || 0)
+      .input("designation", sql.VarChar, designation)
+      .input("active", sql.VarChar, active)
+      .input("department", sql.VarChar, department)
+      .input("desgorder", sql.Int, desgorder || 0)
+      .input("phoneno", sql.VarChar, phoneno)
+      .query(`
+        INSERT INTO VistorList
+        (
+          name,
+          empcode,
+          designation,
+          active,
+          department,
+          desgorder,
+          phoneno
+        )
+        VALUES
+        (
+          @name,
+          @empcode,
+          @designation,
+          @active,
+          @department,
+          @desgorder,
+          @phoneno
+        )
+      `);
+
+    res.json({
+      status: "success",
+      message: "Visitor Added"
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      status: "error",
+      message: "Technical issue"
+    });
+  }
+});
+
+router.put("/visitorlist/update", async (req, res) => {
+
+  try {
+
+    const {
+      id,
+      name,
+      empcode,
+      designation,
+      active,
+      department,
+      desgorder,
+      phoneno
+    } = req.body;
+
+    const pool = await getDb2Connection();
+
+    await pool.request()
+      .input("id", sql.Int, id)
+      .input("name", sql.VarChar, name)
+      .input("empcode", sql.Int, empcode || 0)
+      .input("designation", sql.VarChar, designation)
+      .input("active", sql.VarChar, active)
+      .input("department", sql.VarChar, department)
+      .input("desgorder", sql.Int, desgorder || 0)
+      .input("phoneno", sql.VarChar, phoneno)
+      .query(`
+        UPDATE VistorList
+        SET
+          name = @name,
+          empcode = @empcode,
+          designation = @designation,
+          active = @active,
+          department = @department,
+          desgorder = @desgorder,
+          phoneno = @phoneno
+        WHERE id = @id
+      `);
+
+    res.json({
+      status: "success",
+      message: "Visitor Updated"
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      status: "error",
+      message: "Technical issue"
+    });
+  }
+});
+
+router.put("/visitorlist/hide/:id", async (req, res) => {
+
+  try {
+
+    const id = req.params.id;
+
+    const pool = await getDb2Connection();
+
+    await pool.request()
+      .input("id", sql.Int, id)
+      .query(`
+        UPDATE VistorList
+        SET active =
+        CASE
+          WHEN active = 'y' THEN 'n'
+          ELSE 'y'
+        END
+        WHERE id = @id
+      `);
+
+    res.json({
+      status: "success",
+      message: "Status Updated"
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      status: "error",
+      message: "Technical issue"
+    });
+  }
+});
+
+router.delete("/visitorlist/delete/:id", async (req, res) => {
+
+  try {
+
+    const id = req.params.id;
+
+    const pool = await getDb2Connection();
+
+    await pool.request()
+      .input("id", sql.Int, id)
+      .query(`
+        DELETE FROM VistorList
+        WHERE id = @id
+      `);
+
+    res.json({
+      status: "success",
+      message: "Deleted Successfully"
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
     res.status(500).json({
       status: "error",
       message: "Technical issue"
@@ -803,7 +1018,8 @@ router.get("/reports", async (req, res) => {
           toMeet,
           imagePath,
           bCardPath,
-          status
+          status,
+          purpose
         FROM Appointments
         WHERE CAST(apptDate AS DATE) BETWEEN @from AND @to
         ORDER BY apptDate DESC

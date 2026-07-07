@@ -13,6 +13,7 @@ import UserLogin from "./User/UserLogin";
 import Appoint from "./User/Appoint.js";
 import Status from "./User/Status.js";
 import ErrorPage from "./components/ErrorPage";
+import VisiterList from "./components/VisiterList.js";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/checkin" element={<CheckIn />} />
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/visiterlist" element={<VisiterList />} />
         </Route>
 
       </Routes>

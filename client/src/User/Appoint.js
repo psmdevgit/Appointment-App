@@ -466,7 +466,7 @@ const sendMessage = async (phone, meetName, vName, company, date, time, id ) => 
 
         {/* LEFT SIDE */}
         <div className="left">
-          <label>Vendor Name</label>
+          <label>Name</label>
           <input
             className="input"
             value={form.name}            

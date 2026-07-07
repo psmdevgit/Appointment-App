@@ -713,7 +713,7 @@ const clearImage = (type) => {
                         onChange={(e) => setForm({ ...form, apptID: e.target.value })}
                       />
 
-                      <label>Vendor Name</label>
+                      <label>Name</label>
                       <input
                         className="input"
                         value={form.name}            

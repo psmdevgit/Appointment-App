@@ -84,37 +84,56 @@ export default function Navbar() {
       </div>
 
       {/* MENU */}
-      <div className="bg-light px-lg-5 py-lg-2 menu-bar">
-        <Link
-          className={`btn btn-sm me-2 menubtn ${
-            location.pathname === "/checkin" ? "btn-success" : "btn-outline-success"
-          }`}
-          to="/checkin"
-        >
-          Check In
-        </Link>
+      <div className="bg-light px-lg-5 py-lg-2 menu-bar d-flex justify-content-between">
 
-        <Link
-          className={`btn btn-sm me-2 menubtn ${
-            location.pathname === "/checkout"
-              ? "btn-success"
-              : "btn-outline-success"
-          }`}
-          to="/checkout"
-        >
-          Check Out
-        </Link>
+        <div>
 
-        <Link
-          className={`btn btn-sm menubtn ${
-            location.pathname === "/reports"
-              ? "btn-success"
-              : "btn-outline-success"
-          }`}
-          to="/reports"
-        >
-          Reports
-        </Link>
+            <Link
+                className={`btn btn-sm me-2 menubtn ${
+                  location.pathname === "/checkin" ? "btn-success" : "btn-outline-success"
+                }`}
+                to="/checkin"
+              >
+                Check In
+              </Link>
+
+              <Link
+                className={`btn btn-sm me-2 menubtn ${
+                  location.pathname === "/checkout"
+                    ? "btn-success"
+                    : "btn-outline-success"
+                }`}
+                to="/checkout"
+              >
+                Check Out
+              </Link>
+
+              <Link
+                className={`btn btn-sm menubtn ${
+                  location.pathname === "/reports"
+                    ? "btn-success"
+                    : "btn-outline-success"
+                }`}
+                to="/reports"
+              >
+                Reports
+              </Link>
+
+        </div>
+        
+
+        <div>
+           <Link
+            className={`btn btn-sm menubtn ${
+              location.pathname === "/visiterlist"
+                ? "btn-success"
+                : "btn-outline-success"
+            }`}
+            to="/visiterlist"
+          >
+            Visiter List
+          </Link>
+        </div>
       </div>
     </>
   );

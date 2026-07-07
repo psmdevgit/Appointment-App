@@ -19,6 +19,7 @@ const [toDate, setToDate] = useState(today);
 const [toMeetList, setToMeetList] = useState([]);
 const [selectedToMeet, setSelectedToMeet] = useState([]);
 const [showDropdown, setShowDropdown] = useState(false);
+const [purposeSearch, setPurposeSearch] = useState("");
 
 const [showImageModal, setShowImageModal] = useState(false);
 const [modalImage, setModalImage] = useState(null);
@@ -140,6 +141,7 @@ useEffect(() => {
 
       if (res.data.status === "success") {
         setData(res.data.data || []);
+        console.log(res.data.data);
       } else {
         setData([]);
       }
@@ -210,7 +212,14 @@ const filteredData = data.filter((item) => {
     selectedStatus.length === 0 ||
     selectedStatus.includes(item.status);
 
-  return matchToMeet && matchStatus;
+  // Purpose search (contains, case-insensitive)
+  const matchPurpose =
+    purposeSearch.trim() === "" ||
+    (item.purpose ?? "")
+      .toLowerCase()
+      .includes(purposeSearch.toLowerCase());
+
+  return matchToMeet && matchStatus && matchPurpose;
 });
 
 const exportToExcel = () => {
@@ -324,7 +333,7 @@ const handleOut = async (vendor) => {
       {/* HEADER */}      
 
       {/* FILTER SECTION */}
-      <div className="row mb-3 align-items-center d-flex gap-3 filter-small">
+      <div className="row mb-3 align-items-center d-flex  filter-small">
         
 
         <div className="d-flex justify-content-center col-md-2 gap-2 align-items-center">
@@ -482,7 +491,17 @@ const handleOut = async (vendor) => {
             )}
         </div>
 
+<div className="d-flex col-md-2 gap-2 align-items-center">
+  <label className="form-label fw-bold">Purpose :</label>
 
+  <input
+    type="text"
+    className="form-control filterdiv"
+    placeholder="Search purpose..."
+    value={purposeSearch}
+    onChange={(e) => setPurposeSearch(e.target.value)}
+  />
+</div>
 
        <div className="d-flex col-lg-2 gap-2">
         <button className="btn btn-primary btn-sm flex-fill" onClick={fetchReports}>
@@ -514,6 +533,7 @@ const handleOut = async (vendor) => {
               <th>Check-In Time</th>
               <th>Check-Out Time</th>
               <th>To Meet</th>
+              <th>Purpose</th>
               <th>Doc</th>
               <th>Status</th>
             </tr>
@@ -569,6 +589,7 @@ const handleOut = async (vendor) => {
                 <td>{item.outTime || "-----"}</td> */}
                 <td>{item.toMeet}</td>
 
+                <td>{item.purpose}</td>
                 {/* Business Card */}
                 <td>
                   <img
