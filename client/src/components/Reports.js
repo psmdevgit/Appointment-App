@@ -2,6 +2,8 @@ import React, { useState, useEffect , useRef  } from "react";
 import API from "../axios";
 import userIcon from "../assets/profile.png";
 import bCard from "../assets/bcard.png";
+import userBlur from "../assets/profileblur.png";
+import bCardBlur from "../assets/bcardblur.png";
 import "../style/report.css"
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -20,9 +22,11 @@ const [toMeetList, setToMeetList] = useState([]);
 const [selectedToMeet, setSelectedToMeet] = useState([]);
 const [showDropdown, setShowDropdown] = useState(false);
 const [purposeSearch, setPurposeSearch] = useState("");
+const [companySearch, setCompanySearch] = useState("");
 
 const [showImageModal, setShowImageModal] = useState(false);
 const [modalImage, setModalImage] = useState(null);
+const [imageLoading, setImageLoading] = useState(false);
 
 const [statusList] = useState([
   { label: "Rejected", value: 1 },
@@ -52,6 +56,79 @@ const dropdownRef = useRef();
 //     document.removeEventListener("mousedown", handleClickOutside);
 //   };
 // }, []);
+
+
+const openProfile = async (id) => {
+
+  try {
+
+    setImageLoading(true);
+    setShowImageModal(true);
+
+    const res = await API.get(`/visitor/profile-image/${id}`);
+
+    if (res.data.status === "success") {
+
+      const img = res.data.image;
+
+      if (img.includes(".")) {
+        setModalImage(`/Images/${img}`);
+      } else {
+        setModalImage(`data:image/png;base64,${img}`);
+      }
+
+    } else {
+      setModalImage(userBlur);
+    }
+
+  } catch (err) {
+
+    console.log(err);
+    setModalImage(userBlur);
+
+  } finally {
+
+    setImageLoading(false);
+
+  }
+
+};
+
+const openBusinessCard = async (id) => {
+
+  try {
+
+    setImageLoading(true);
+    setShowImageModal(true);
+
+    const res = await API.get(`/visitor/business-card/${id}`);
+
+    if (res.data.status === "success") {
+
+      const img = res.data.image;
+
+      if (img.includes(".")) {
+        setModalImage(`/Images/${img}`);
+      } else {
+        setModalImage(`data:image/png;base64,${img}`);
+      }
+
+    } else {
+      setModalImage(bCardBlur);
+    }
+
+  } catch (err) {
+
+    console.log(err);
+    setModalImage(bCardBlur);
+
+  } finally {
+
+    setImageLoading(false);
+
+  }
+
+};
 
 const showErrorToast = (message) => {
   const toastEl = document.getElementById("errorToast");
@@ -219,7 +296,15 @@ const filteredData = data.filter((item) => {
       .toLowerCase()
       .includes(purposeSearch.toLowerCase());
 
-  return matchToMeet && matchStatus && matchPurpose;
+        // Company search (contains, case-insensitive)
+  const matchCompany =
+    companySearch.trim() === "" ||
+    (item.companyName ?? "")
+      .toLowerCase()
+      .includes(companySearch.toLowerCase());
+
+
+  return matchToMeet && matchStatus && matchPurpose && matchCompany;
 });
 
 const exportToExcel = () => {
@@ -336,8 +421,9 @@ const handleOut = async (vendor) => {
       <div className="row mb-3 align-items-center d-flex  filter-small">
         
 
-        <div className="d-flex justify-content-center col-md-2 gap-2 align-items-center">
-          <label className="form-label fw-bold">From :</label>
+        <div className="d-flex justify-content-center col-md-2 gap-4 align-items-center">
+  <div className="d-flex gap-3 m-auto">
+          <label className="form-labe fw-bold ">From </label>
           <input
             type="date"
             className="form-control filterdiv"
@@ -346,8 +432,8 @@ const handleOut = async (vendor) => {
           />
         </div>
 
-        <div className="d-flex col-md-2 gap-2 align-items-center">
-          <label className="form-label fw-bold">To :</label>
+        <div className="d-flex gap-3 m-auto">
+          <label className="form-labe fw-bold">To </label>
           <input
             type="date"
             className="form-control filterdiv"
@@ -356,8 +442,11 @@ const handleOut = async (vendor) => {
             onChange={(e) => setToDate(e.target.value)}
           />
         </div>
+        </div>
 
-     <div className="position-relative  d-flex col-md-2 gap-2 align-items-center "  ref={dropdownRef}>
+      
+
+     <div className="position-relative  d-flex col-md-2 gap-2 align-items-center justify-content-end"  ref={dropdownRef}>
           <label className="form-label fw-bold">To Meet :</label>
 
           {/* Dropdown Button */}
@@ -427,6 +516,18 @@ const handleOut = async (vendor) => {
         </div>
 
 
+      <div className="d-flex col-md-2 gap-2 align-items-center">
+        <label className="form-label fw-bold">Company :</label>
+
+        <input
+          type="text"
+          className="form-control filterdiv"
+          placeholder="Search purpose..."
+          value={companySearch}
+          onChange={(e) => setCompanySearch(e.target.value)}
+        />
+      </div>
+
         <div className="d-flex col-md-2 gap-2 align-items-center position-relative" ref={statusRef}>
             <label className="form-label fw-bold">Status :</label>
 
@@ -491,7 +592,7 @@ const handleOut = async (vendor) => {
             )}
         </div>
 
-<div className="d-flex col-md-2 gap-2 align-items-center">
+<div className="d-flex col-md-2 gap-2 align-items-center ">
   <label className="form-label fw-bold">Purpose :</label>
 
   <input
@@ -502,6 +603,8 @@ const handleOut = async (vendor) => {
     onChange={(e) => setPurposeSearch(e.target.value)}
   />
 </div>
+
+
 
        <div className="d-flex col-lg-2 gap-2">
         <button className="btn btn-primary btn-sm flex-fill" onClick={fetchReports}>
@@ -543,7 +646,7 @@ const handleOut = async (vendor) => {
 
             {loading && (
               <tr>
-                <td colSpan="10">Loading...</td>
+                <td colSpan="11">Loading...</td>
               </tr>
             )}
 
@@ -558,7 +661,7 @@ const handleOut = async (vendor) => {
 
                 {/* Profile */}
                 <td>
-                  <img
+                  {/* <img
                     src={getImageSrc(item.imagePath)}
                     onError={(e) => (e.target.src = userIcon)}
                     style={{
@@ -573,7 +676,20 @@ const handleOut = async (vendor) => {
                         setShowImageModal(true);
                       }}
 
-                  />
+                  /> */}
+
+                  <img
+                      src={userBlur}
+                      style={{
+                        width: "45px",
+                        height: "45px",
+                        objectFit: "cover",
+                        borderRadius: "6px",
+                        cursor: "pointer"
+                      }}
+                      onClick={() => openProfile(item.id)}
+                    />
+
                 </td>
 
                 <td>{item.vName}</td>
@@ -592,7 +708,7 @@ const handleOut = async (vendor) => {
                 <td>{item.purpose}</td>
                 {/* Business Card */}
                 <td>
-                  <img
+                  {/* <img
                     src={getBCardSrc(item.bCardPath)}
                     onError={(e) => (e.target.src = bCard)}
                     style={{
@@ -607,7 +723,20 @@ const handleOut = async (vendor) => {
                       setShowImageModal(true);
                     }}
 
+                  /> */}
+
+                  <img
+                      src={bCardBlur}
+                      style={{
+                        width: "45px",
+                        height: "45px",
+                        objectFit: "contain",
+                        borderRadius: "6px",
+                        cursor: "pointer"
+                      }}
+                      onClick={() => openBusinessCard(item.id)}
                   />
+
                 </td>
 
                 {/* Status */}
@@ -648,7 +777,15 @@ const handleOut = async (vendor) => {
           </tbody>
 
         </table>
+        
       </div>
+
+      {filteredData.length === 0 ? <></> : <>
+      <div className="px-2 bg-light">
+            <label>{filteredData.length} - Entries</label>
+      </div>
+      
+      </>}
 
         {showImageModal && (
           <div className="modal d-block" tabIndex="-1" style={{ background: "rgba(0,0,0,0.6)" }}>
@@ -665,7 +802,7 @@ const handleOut = async (vendor) => {
                 </div>
 
                 <div className="modal-body text-center">
-                  <img
+                  {/* <img
                     src={modalImage}
                     alt="preview"
                     style={{
@@ -673,7 +810,29 @@ const handleOut = async (vendor) => {
                       maxHeight: "70vh",
                       borderRadius: "8px"
                     }}
-                  />
+                  /> */}
+
+                  {imageLoading ? (
+
+                        <div className="py-5">
+
+                        <div className="spinner-border text-primary"></div>
+
+                        <p className="mt-3">Loading Image...</p>
+
+                        </div>
+
+                        ) : (
+                              <img
+                                                  src={modalImage}
+                                                  alt="preview"
+                                                  style={{
+                                                    maxWidth: "100%",
+                                                    maxHeight: "70vh",
+                                                    borderRadius: "8px"
+                                                  }}
+                                                /> 
+                        )}
                 </div>
 
               </div>
