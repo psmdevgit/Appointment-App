@@ -10,6 +10,7 @@ const app = express();
 
 // CORS (adjust if needed)
 const allowedOrigins = [
+  "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:3002",
   "http://192.168.5.62:4444"

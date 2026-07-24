@@ -1016,8 +1016,8 @@ router.get("/reports", async (req, res) => {
           inTime,
           outTime,
           toMeet,
-          imagePath,
-          bCardPath,
+          --imagePath,
+          --bCardPath,
           status,
           purpose
         FROM Appointments
@@ -1034,6 +1034,48 @@ router.get("/reports", async (req, res) => {
     console.log(err);
     res.status(500).json({ status: "error" });
   }
+});
+
+router.get("/visitor/profile-image/:id", async (req, res) => {
+
+    const id = req.params.id;
+    
+    const pool = await getDb2Connection();
+
+    console.log(id);
+    const result = await pool.request().input("id", id).query(`
+        SELECT imagePath
+        FROM Appointments
+        WHERE id=@id
+    `);
+
+    res.json({
+        status: "success",
+        image: result.recordset[0].imagePath
+    });
+
+});
+
+router.get("/visitor/business-card/:id", async (req, res) => {
+
+    const id = req.params.id;
+
+    
+    const pool = await getDb2Connection();
+
+    console.log(id);
+
+    const result = await pool.request().input("id", id).query(`
+        SELECT bCardPath
+        FROM Appointments
+        WHERE id=@id
+    `);
+
+    res.json({
+        status: "success",
+        image: result.recordset[0].bCardPath
+    });
+
 });
 
 //  ============================    get to-meet person mobile number  ================================================
